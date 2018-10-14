@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/rand"
-	"os"
+	"strings"
 	"time"
 )
 
@@ -38,23 +38,20 @@ func calculateBlockHash(block Block) string {
 	return hex.EncodeToString(hash.Sum(nil))
 }
 
-func createGenesisBlock() Block {
+// Mine new block by finding the proper nonce and hash according to the difficulty level
+func mineBlock(block Block, difficulty int) (int, string) {
+	nonce := 0
+	for string([]rune(block.hash)[0:difficulty]) != strings.Repeat("0", difficulty) {
+		block.nonce = nonce
+		block.hash = calculateBlockHash(block)
+		nonce++
+	}
 
+	return block.nonce, block.hash
+}
+
+func generateRandomNumber() int {
 	// Generating new seed for the nonce
 	rand.Seed(time.Now().UTC().UnixNano())
-
-	genesisBlock := Block{
-		version:      os.Getenv("block_chain_version"),
-		index:        0,
-		timestamp:    time.Now().String(),
-		hash:         "",
-		previousHash: "0",
-		merkleroot:   "", // TODO: TRANSACTION INTERFACE
-		tx:           []string{},
-		nonce:        10000000000 + rand.Intn(9999999999-1000000000), // Horrible solution for nonce generation
-		difficulty:   2}
-
-	// Calculating the hash for the genesis block
-	genesisBlock.hash = calculateBlockHash(genesisBlock)
-	return genesisBlock
+	return 10000000000 + rand.Intn(9999999999-1000000000)
 }
