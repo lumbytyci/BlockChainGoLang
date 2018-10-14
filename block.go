@@ -4,10 +4,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"math/rand"
+	"os"
+	"time"
 )
 
 type Block struct {
-	version      int
+	version      string
 	index        int
 	timestamp    string
 	hash         string
@@ -15,7 +18,7 @@ type Block struct {
 	merkleroot   string
 	tx           []string
 	nonce        int
-	difficulty   float64
+	difficulty   int
 }
 
 /* Calculating the block hash (SHA256) of the block from the following data
@@ -33,4 +36,25 @@ func calculateBlockHash(block Block) string {
 	hash.Write([]byte(hashInput))
 
 	return hex.EncodeToString(hash.Sum(nil))
+}
+
+func createGenesisBlock() Block {
+
+	// Generating new seed for the nonce
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	genesisBlock := Block{
+		version:      os.Getenv("block_chain_version"),
+		index:        0,
+		timestamp:    time.Now().String(),
+		hash:         "",
+		previousHash: "0",
+		merkleroot:   "", // TODO: TRANSACTION INTERFACE
+		tx:           []string{},
+		nonce:        10000000000 + rand.Intn(9999999999-1000000000), // Horrible solution for nonce generation
+		difficulty:   2}
+
+	// Calculating the hash for the genesis block
+	genesisBlock.hash = calculateBlockHash(genesisBlock)
+	return genesisBlock
 }
