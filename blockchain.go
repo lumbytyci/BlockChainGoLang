@@ -25,7 +25,7 @@ func createGenesisBlock() Block {
 		merkleroot:   "",                      // TODO: TRANSACTION INTERFACE
 		tx:           []string{},
 		nonce:        generateRandomNumber(), // Horrible solution for nonce generation
-		difficulty:   2}
+		difficulty:   4}
 
 	// Calculating the hash for the genesis block
 	genesisBlock.hash = calculateBlockHash(genesisBlock)
@@ -35,9 +35,21 @@ func createGenesisBlock() Block {
 
 func appendBlock(block Block) {
 
-	nonce, hash := mineBlock(block, 3)
+	nonce, hash := mineBlock(block, 4)
 	block.nonce = nonce
 	block.hash = hash
-	block.previousHash = BlockChain[len(BlockChain)-1].hash
+	block.previousHash = calculateBlockHash(BlockChain[len(BlockChain)-1])
 	BlockChain = append(BlockChain, block)
+}
+
+// Iterate through the chain to verify if the integrity of the blockchain holds
+func verifyBlockchainIntegrity(Blockchain []Block) bool {
+
+	for i := 1; i < len(Blockchain); i++ {
+		if calculateBlockHash(Blockchain[i-1]) != BlockChain[i].previousHash {
+			return false
+		}
+	}
+
+	return true
 }
