@@ -35,10 +35,7 @@ func createGenesisBlock() Block {
 
 func appendBlock(block Block) {
 
-	nonce, hash := mineBlock(block, 4)
-	block.nonce = nonce
-	block.hash = hash
-	block.previousHash = calculateBlockHash(BlockChain[len(BlockChain)-1])
+	block = mineBlock(block, 4)
 	BlockChain = append(BlockChain, block)
 }
 

@@ -39,7 +39,7 @@ func calculateBlockHash(block Block) string {
 }
 
 // Mine new block by finding the proper nonce and hash according to the difficulty level
-func mineBlock(block Block, difficulty int) (int, string) {
+func mineBlock(block Block, difficulty int) Block {
 	nonce := -1
 	block.previousHash = calculateBlockHash(BlockChain[len(BlockChain)-1]) // This step should not repeat
 	for string([]rune(block.hash)[0:difficulty]) != strings.Repeat("0", difficulty) {
@@ -47,7 +47,7 @@ func mineBlock(block Block, difficulty int) (int, string) {
 		block.nonce = nonce
 		block.hash = calculateBlockHash(block)
 	}
-	return block.nonce, block.hash
+	return block
 }
 
 func generateRandomNumber() int {
