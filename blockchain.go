@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"strings"
 	"time"
 )
@@ -17,7 +16,7 @@ func initializeBlockChain() []Block {
 func createGenesisBlock() Block {
 
 	genesisBlock := Block{
-		version:      os.Getenv("block_chain_version"),
+		version:      "1.0",
 		index:        0,
 		timestamp:    time.Now().String(),
 		hash:         "",
@@ -29,7 +28,6 @@ func createGenesisBlock() Block {
 
 	// Calculating the hash for the genesis block
 	genesisBlock.hash = calculateBlockHash(genesisBlock)
-
 	return genesisBlock
 }
 

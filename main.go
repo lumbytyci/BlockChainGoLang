@@ -18,7 +18,6 @@ func main() {
 		fmt.Println("HASH: ", BlockChain[i].hash)
 	}
 
-	// calculateBlockHash(Block{"1", 0, "12:00:00", "NoHash", "NoHash", "NoMerkelRoot", []string{"A"}, 12, 1})
 	// fmt.Println("Simple Block Chain Implementation")
 	fmt.Println(verifyBlockchainIntegrity(BlockChain))
 }
